@@ -233,21 +233,42 @@
         </div>
 
         <div class="embed-info">
-            <h2>Embed This Page</h2>
-            <p>Copy this code to embed all cameras on your website:</p>
-            <div class="embed-code" id="embed-code">
-&lt;iframe src="<span id="embed-url"></span>" width="100%" height="800" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+            <h2>Embed Individual Cameras</h2>
+            <p>Copy the embed code for each camera to embed them separately on your website:</p>
+            
+            <div style="margin-top: 20px;">
+                <h3 style="margin-bottom: 10px; color: #4ade80;">Bliss Camera</h3>
+                <div class="embed-code" id="embed-code-bliss">
+&lt;iframe src="<span id="embed-url-bliss"></span>" width="100%" height="600" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+                </div>
+                <button class="copy-btn" onclick="copyEmbedCode('bliss')">Copy Embed Code</button>
             </div>
-            <button class="copy-btn" onclick="copyEmbedCode()">Copy Embed Code</button>
+
+            <div style="margin-top: 20px;">
+                <h3 style="margin-bottom: 10px; color: #4ade80;">Abellona Camera</h3>
+                <div class="embed-code" id="embed-code-abellona">
+&lt;iframe src="<span id="embed-url-abellona"></span>" width="100%" height="600" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+                </div>
+                <button class="copy-btn" onclick="copyEmbedCode('abellona')">Copy Embed Code</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h3 style="margin-bottom: 10px; color: #4ade80;">Anchorage by the Sea Camera</h3>
+                <div class="embed-code" id="embed-code-anchorage">
+&lt;iframe src="<span id="embed-url-anchorage"></span>" width="100%" height="600" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+                </div>
+                <button class="copy-btn" onclick="copyEmbedCode('anchorage')">Copy Embed Code</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Get current page URL for embed code
-        document.getElementById('embed-url').textContent = window.location.href;
-
-        const cameras = ['bliss', 'abellona', 'anchorage'];
+        // Get current page URL for embed codes
         const baseUrl = window.location.origin;
+        document.getElementById('embed-url-bliss').textContent = `${baseUrl}/bliss.html`;
+        document.getElementById('embed-url-abellona').textContent = `${baseUrl}/abellona.html`;
+        document.getElementById('embed-url-anchorage').textContent = `${baseUrl}/anchorage.html`;
+
 
         function initCamera(cameraName) {
             const video = document.getElementById(`video-${cameraName}`);
@@ -332,8 +353,8 @@
         });
 
         // Copy embed code function
-        function copyEmbedCode() {
-            const embedCode = document.getElementById('embed-code').textContent;
+        function copyEmbedCode(cameraName) {
+            const embedCode = document.getElementById(`embed-code-${cameraName}`).textContent;
             navigator.clipboard.writeText(embedCode).then(() => {
                 const btn = event.target;
                 const originalText = btn.textContent;
