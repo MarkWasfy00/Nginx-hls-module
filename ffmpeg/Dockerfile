@@ -4,6 +4,5 @@ RUN apt update
 RUN apt install -y ffmpeg
 
 WORKDIR /media
-COPY test.mp4 .
 
-ENTRYPOINT ffmpeg -re -i test.mp4 -c:v libx264 -c:a aac -f flv rtmp://nginx-c/hls/my-video
+ENTRYPOINT ffmpeg -rtsp_transport tcp -i ${RTSP_URL} -c:v libx264 -preset veryfast -tune zerolatency -vf scale=1920:1080 -b:v 3000k -maxrate 3000k -bufsize 6000k -g 60 -c:a aac -b:a 128k -f flv rtmp://nginx:${RTMP_PORT}/live/${STREAM_NAME}
