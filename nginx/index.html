@@ -269,6 +269,7 @@
         document.getElementById('embed-url-abellona').textContent = `${baseUrl}/abellona.html`;
         document.getElementById('embed-url-anchorage').textContent = `${baseUrl}/anchorage.html`;
 
+        const cameras = ['bliss', 'abellona', 'anchorage'];
 
         function initCamera(cameraName) {
             const video = document.getElementById(`video-${cameraName}`);
@@ -298,14 +299,17 @@
                 });
 
                 hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.log(`HLS error for ${cameraName}:`, data);
                     if (data.fatal) {
                         switch(data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.error(`Network error for ${cameraName}`);
+                                console.error(`Network error for ${cameraName}, retrying...`);
+                                statusText.textContent = 'Reconnecting...';
                                 hls.startLoad();
                                 break;
                             case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.error(`Media error for ${cameraName}`);
+                                console.error(`Media error for ${cameraName}, recovering...`);
+                                statusText.textContent = 'Recovering...';
                                 hls.recoverMediaError();
                                 break;
                             default:
@@ -316,7 +320,11 @@
                                 statusText.textContent = 'Offline';
                                 errorDiv.style.display = 'block';
                                 // Retry after 5 seconds
-                                setTimeout(() => initCamera(cameraName), 5000);
+                                setTimeout(() => {
+                                    statusText.textContent = 'Connecting...';
+                                    statusDot.classList.remove('error');
+                                    initCamera(cameraName);
+                                }, 5000);
                                 break;
                         }
                     }
