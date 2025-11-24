@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
   nginx:
     image: nginx:i
     container_name: ${NGINX_HOST}
+    restart: always
     build:
       context: nginx
       dockerfile: Dockerfile
@@ -22,13 +21,14 @@ services:
   ffmpeg:
     image: ffmpeg-i
     container_name: ${FFMPEG_HOST}
+    restart: always
     build:
       context: ./ffmpeg
       dockerfile: Dockerfile
     environment:
       - RTSP_URL=${RTSP_URL}
       - RTMP_PORT=${RTMP_PORT}
-      - STREAM_NAME=camera
+      - STREAM_NAME=bliss
     env_file: .env
     depends_on:
       - nginx
@@ -36,6 +36,7 @@ services:
   ffmpeg-abellona:
     image: ffmpeg-i
     container_name: ${FFMPEG_HOST}-abellona
+    restart: always
     build:
       context: ./ffmpeg
       dockerfile: Dockerfile
@@ -50,6 +51,7 @@ services:
   ffmpeg-anchorage:
     image: ffmpeg-i
     container_name: ${FFMPEG_HOST}-anchorage
+    restart: always
     build:
       context: ./ffmpeg
       dockerfile: Dockerfile
