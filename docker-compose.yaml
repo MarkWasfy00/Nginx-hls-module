@@ -1,4 +1,26 @@
 services:
+  nginx:
+    image: nginx:i
+    container_name: ${NGINX_HOST}
+    restart: always
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+      args:
+        ENABLED_MODULES: rtmp
+    env_file: .env
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+      - ${RTMP_PORT}:${RTMP_PORT}
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/rtmp.conf:/etc/nginx/templates/rtmp.conf.template
+      - ./nginx/http.conf:/etc/nginx/templates/http.conf.template
+      - ./nginx/index.html:/usr/share/nginx/html/index.html
+      - ./nginx/bliss.html:/usr/share/nginx/html/bliss.html
+      - ./nginx/abellona.html:/usr/share/nginx/html/abellona.html
+      - ./nginx/anchorage.html:/usr/share/nginx/html/anchorage.html
+
   ffmpeg:
     image: ffmpeg-i
     container_name: ${FFMPEG_HOST}
@@ -8,8 +30,11 @@ services:
       dockerfile: Dockerfile
     environment:
       - RTSP_URL=${RTSP_URL}
-      - YOUTUBE_STREAM_KEY=${YOUTUBE_STREAM_KEY}
+      - RTMP_PORT=${RTMP_PORT}
+      - STREAM_NAME=bliss
     env_file: .env
+    depends_on:
+      - nginx
 
   ffmpeg-abellona:
     image: ffmpeg-i
@@ -20,8 +45,11 @@ services:
       dockerfile: Dockerfile
     environment:
       - RTSP_URL=${RTSP_URL_ABELLONA}
-      - YOUTUBE_STREAM_KEY=${YOUTUBE_STREAM_KEY}
+      - RTMP_PORT=${RTMP_PORT}
+      - STREAM_NAME=abellona
     env_file: .env
+    depends_on:
+      - nginx
 
   ffmpeg-anchorage:
     image: ffmpeg-i
@@ -32,5 +60,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - RTSP_URL=${RTSP_URL_ANCHORAGE}
-      - YOUTUBE_STREAM_KEY=${YOUTUBE_STREAM_KEY}
+      - RTMP_PORT=${RTMP_PORT}
+      - STREAM_NAME=anchorage
     env_file: .env
+    depends_on:
+      - nginx
